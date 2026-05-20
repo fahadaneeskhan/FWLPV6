@@ -1,0 +1,857 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover">
+<title>Fat Loss — Fahad</title>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Fat Loss">
+<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='100' fill='%230E0E0E'/%3E%3Ctext x='256' y='340' text-anchor='middle' font-family='Arial Black' font-weight='900' font-size='260' fill='%23E8FF47'%3EFL%3C/text%3E%3C/svg%3E">
+<link rel="manifest" href="data:application/manifest+json,%7B%22name%22%3A%22Fat%20Loss%20Program%22%2C%22short_name%22%3A%22Fat%20Loss%22%2C%22start_url%22%3A%22.%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%230E0E0E%22%2C%22theme_color%22%3A%22%230E0E0E%22%7D">
+<meta name="theme-color" content="#0E0E0E">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--a:#E8FF47;--dk:#0E0E0E;--cd:#161616;--mu:#888;--bd:#242424;--gr:#1c1c1c}
+html,body{background:var(--dk);color:#f0f0f0;font-family:'DM Sans',system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+body{padding-bottom:calc(env(safe-area-inset-bottom)+20px)}
+.app{max-width:720px;margin:0 auto;padding:0 15px 40px}
+.hero{text-align:center;padding:32px 0 20px}
+.hero-lbl{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--mu);margin-bottom:8px}
+.hero-title{font-family:'Bebas Neue',Impact,sans-serif;font-size:clamp(44px,12vw,70px);line-height:.9;color:#fff;margin-bottom:4px}
+.hero-title span{color:var(--a)}
+.week-stepper{display:flex;align-items:center;justify-content:center;gap:0;margin:16px auto 0;background:var(--cd);border:1px solid var(--bd);border-radius:16px;overflow:hidden;max-width:300px}
+.step-btn{background:transparent;border:none;color:var(--a);font-size:24px;padding:12px 20px;cursor:pointer;line-height:1;-webkit-tap-highlight-color:transparent;flex-shrink:0}
+.step-btn:active{background:#1a1a1a}
+.step-dim{opacity:.3;pointer-events:none}
+.day-stepper{display:flex;align-items:center;background:var(--cd);border:1px solid var(--bd);border-radius:14px;overflow:hidden;margin-bottom:14px;text-align:center}
+.day-stepper .step-mid{padding:14px 8px}
+.day-ex-card{background:var(--cd);border:1px solid var(--bd);border-radius:14px;padding:15px;margin-bottom:12px}
+.step-mid{flex:1;text-align:center;padding:10px 8px}
+.step-week{font-family:'Bebas Neue',Impact,sans-serif;font-size:28px;color:#fff;line-height:1}
+.step-phase{font-size:10px;color:var(--mu);margin-top:2px}
+.today-snap{margin:12px 0 0;background:var(--cd);border:1px solid var(--bd);border-radius:12px;padding:12px 16px;display:flex;align-items:center;gap:12px}
+.today-icon{font-size:24px;flex-shrink:0}
+.today-label{font-size:10px;color:var(--mu);text-transform:uppercase;letter-spacing:1px}
+.today-session{font-size:14px;font-weight:600;color:#fff;margin-top:2px}
+.today-done{margin-left:auto;background:#1a2200;border:1px solid #3a4400;color:var(--a);font-size:11px;padding:4px 10px;border-radius:6px;font-weight:600;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.today-done.done{background:#0d1a00;color:#6a8a20}
+.tabs{display:flex;gap:3px;background:var(--cd);border-radius:12px;padding:4px;margin-bottom:18px;border:1px solid var(--bd);position:sticky;top:6px;z-index:20}
+.tab{flex:1;padding:8px 2px;border-radius:8px;border:none;background:transparent;color:var(--mu);font-family:'DM Sans',sans-serif;font-size:10px;font-weight:500;cursor:pointer;transition:all .2s;white-space:nowrap;line-height:1.3;-webkit-tap-highlight-color:transparent}
+.tab.active{background:var(--a);color:var(--dk);font-weight:700}
+.panel{display:none}.panel.active{display:block}
+.sec-title{font-family:'Bebas Neue',Impact,sans-serif;font-size:24px;letter-spacing:1px;color:#fff;margin-bottom:2px}
+.sec-sub{font-size:12px;color:var(--mu);margin-bottom:14px}
+.card{background:var(--cd);border:1px solid var(--bd);border-radius:14px;padding:15px;margin-bottom:11px}
+.card-title{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--mu);margin-bottom:11px}
+.stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:11px}
+.stat{background:var(--gr);border-radius:10px;padding:12px;border:1px solid var(--bd)}
+.stat-val{font-family:'Bebas Neue',Impact,sans-serif;font-size:26px;color:var(--a);line-height:1}
+.stat-unit{font-size:11px;color:var(--mu);margin-left:2px}
+.stat-label{font-size:11px;color:var(--mu);margin-top:3px}
+.macro-bar{margin-bottom:12px}
+.macro-row{display:flex;justify-content:space-between;margin-bottom:4px}
+.macro-name{font-size:13px;font-weight:500}
+.macro-val{font-size:12px;color:var(--mu)}
+.bar-bg{height:6px;background:#242424;border-radius:99px;overflow:hidden}
+.bar-fill{height:100%;border-radius:99px}
+.note{background:#1a1f0a;border:1px solid #3a4f10;border-radius:10px;padding:11px 13px;font-size:12px;color:#c8e060;line-height:1.6;margin-bottom:11px}
+.note strong{color:var(--a)}
+.tip{background:#0f1a1a;border:1px solid #1a3535;border-radius:10px;padding:10px 13px;font-size:12px;color:#7ecece;line-height:1.6;margin-bottom:9px}
+.warn{background:#1a110a;border:1px solid #4a2e0e;border-radius:10px;padding:10px 13px;font-size:12px;color:#e0a060;line-height:1.6;margin-bottom:9px}
+.info{background:#0a0f1a;border:1px solid #1a2e4a;border-radius:10px;padding:10px 13px;font-size:12px;color:#7090d0;line-height:1.6;margin-bottom:9px}
+.danger{background:#1a0a0a;border:1px solid #5a1515;border-radius:10px;padding:10px 13px;font-size:12px;color:#e07070;line-height:1.6;margin-bottom:9px}
+.acc{background:var(--cd);border:1px solid var(--bd);border-radius:14px;margin-bottom:10px;overflow:hidden}
+.acc-hdr{display:flex;align-items:center;padding:12px 14px;cursor:pointer;user-select:none;gap:8px;-webkit-tap-highlight-color:transparent}
+.acc-badge{font-family:'Bebas Neue',Impact,sans-serif;font-size:11px;letter-spacing:1px;padding:3px 8px;border-radius:5px;white-space:nowrap}
+.gym-badge{background:var(--a);color:var(--dk)}
+.run-badge{background:#1a1a2e;border:1px solid #3a3a8a;color:#7090ff}
+.cond-badge{background:#1a0f0f;border:1px solid #5a2020;color:#e07070}
+.acc-title{font-weight:600;font-size:13px;flex:1}
+.acc-focus{font-size:11px;color:var(--mu)}
+.chev{color:var(--mu);font-size:13px;transition:transform .2s;flex-shrink:0}
+.chev.open{transform:rotate(180deg)}
+.acc-body{display:none;padding:0 14px 13px}
+.acc-body.open{display:block}
+.ex-row{display:flex;gap:9px;padding:10px 0;border-bottom:1px solid var(--bd)}
+.ex-row:last-of-type{border-bottom:none}
+.ex-row.ex-hold{opacity:.5}
+.ex-num{font-family:'Bebas Neue',Impact,sans-serif;font-size:15px;color:#333;min-width:16px;text-align:right;padding-top:2px}
+.ex-info{flex:1}
+.ex-name{font-size:13px;font-weight:600;margin-bottom:2px}
+.ex-sets{font-size:12px;color:var(--a);font-weight:700;margin-bottom:3px}
+.ex-weight{font-size:14px;font-weight:700;color:#fff;margin-bottom:3px}
+.ex-weight .kg{color:var(--a)}
+.ex-unit{font-size:10px;color:var(--mu);margin-left:3px;font-weight:400}
+.ex-note{font-size:11px;color:var(--mu);line-height:1.45;margin-bottom:2px}
+.ex-apt{font-size:11px;color:#b0d080;line-height:1.45;margin-top:3px;padding:4px 7px;background:#0f1a05;border-radius:5px;border-left:2px solid #4a8a20}
+.ex-piri{font-size:11px;color:#d0a0d0;line-height:1.45;margin-top:3px;padding:4px 7px;background:#160a16;border-radius:5px;border-left:2px solid #7a307a}
+.ex-glute{font-size:11px;color:#a0d070;line-height:1.45;margin-top:3px;padding:4px 7px;background:#0a1a05;border-radius:5px;border-left:2px solid #4a9a20}
+.ex-hold-tag{font-size:9px;background:#1a0505;border:1px solid #6a1010;color:#e05050;padding:2px 6px;border-radius:4px;margin-left:5px;vertical-align:middle;font-family:'DM Sans',sans-serif;font-weight:700;letter-spacing:.5px}
+.ex-shoulder{font-size:11px;color:#e08080;line-height:1.45;margin-top:3px;padding:4px 7px;background:#1a0505;border-radius:5px;border-left:2px solid #8a2020}
+.knee-tag{font-size:9px;background:#1a1100;border:1px solid #4a3000;color:#e0a040;padding:1px 5px;border-radius:4px;margin-left:4px;vertical-align:middle}
+.cardio-note{margin-top:10px;padding:8px 11px;background:#111;border-radius:8px;font-size:12px;color:var(--mu)}
+.meal-row{padding:11px 0;border-bottom:1px solid var(--bd)}
+.meal-row:last-child{border-bottom:none}
+.meal-hd{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:3px}
+.meal-time{font-weight:600;font-size:13px}
+.meal-tag{font-size:9px;color:var(--mu);background:#222;padding:2px 6px;border-radius:4px;margin-left:6px}
+.meal-kcal{font-size:13px;color:var(--a);font-weight:700}
+.meal-food{font-size:12px;color:#ccc;margin-bottom:2px}
+.meal-note{font-size:11px;color:var(--mu)}
+.meal-total{margin-top:10px;padding:8px 11px;background:#111;border-radius:8px;font-size:11px;color:var(--mu)}
+.run-week-card{background:var(--cd);border:1px solid var(--bd);border-radius:14px;padding:16px;margin-bottom:11px}
+.run-phase-row{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.run-phase-badge{font-family:'Bebas Neue',Impact,sans-serif;font-size:13px;letter-spacing:1px;padding:4px 10px;border-radius:6px;background:#1a1a2e;border:1px solid #3a3a8a;color:#7090ff}
+.run-phase-title{font-weight:600;font-size:15px}
+.run-session-big{font-family:'Bebas Neue',Impact,sans-serif;font-size:22px;color:var(--a);margin-bottom:6px;line-height:1.1}
+.run-dist{display:inline-block;background:#111;border:1px solid var(--bd);border-radius:6px;padding:4px 10px;font-size:12px;color:#7090ff;margin-bottom:10px;font-weight:500}
+.run-detail{font-size:13px;color:var(--mu);line-height:1.6}
+.week-nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.week-nav-btn{background:var(--gr);border:1px solid var(--bd);color:#fff;padding:7px 14px;border-radius:8px;cursor:pointer;font-size:13px;-webkit-tap-highlight-color:transparent}
+.week-nav-label{font-family:'Bebas Neue',Impact,sans-serif;font-size:20px;color:#fff}
+.week-adherence{text-align:center;font-size:12px;color:var(--mu);margin-top:2px}
+.day-card{background:var(--cd);border:1px solid var(--bd);border-radius:12px;margin-bottom:8px;display:flex;align-items:center;padding:12px 14px;gap:12px}
+.day-card.done{border-color:#3a5010;background:#0f1a05}
+.day-card.rest-day{opacity:.5}
+.day-icon{font-size:22px;flex-shrink:0;width:32px;text-align:center}
+.day-info{flex:1}
+.day-name{font-size:13px;font-weight:600}
+.day-session{font-size:11px;color:var(--mu);margin-top:2px}
+.day-toggle{width:28px;height:28px;border-radius:50%;border:2px solid var(--bd);background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:14px;-webkit-tap-highlight-color:transparent;flex-shrink:0;transition:all .2s}
+.day-toggle.checked{background:var(--a);border-color:var(--a);color:var(--dk)}
+.sched-week-progress{background:var(--cd);border:1px solid var(--bd);border-radius:12px;padding:14px;margin-bottom:12px}
+.prog-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.prog-label{font-size:12px;color:var(--mu)}
+.prog-pct{font-family:'Bebas Neue',Impact,sans-serif;font-size:20px;color:var(--a)}
+.prog-bar-bg{height:8px;background:#242424;border-radius:99px;overflow:hidden}
+.prog-bar-fill{height:100%;background:var(--a);border-radius:99px;transition:width .4s}
+.big-stat-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:12px}
+.big-stat{background:var(--gr);border-radius:10px;padding:12px;border:1px solid var(--bd);text-align:center}
+.big-stat-val{font-family:'Bebas Neue',Impact,sans-serif;font-size:30px;color:var(--a);line-height:1}
+.big-stat-lbl{font-size:10px;color:var(--mu);margin-top:3px;line-height:1.3}
+.weight-input-row{display:flex;gap:8px;align-items:center;margin-bottom:14px}
+.weight-input{flex:1;background:var(--gr);border:1px solid var(--bd);color:#fff;font-family:'DM Sans',sans-serif;font-size:16px;font-weight:600;padding:10px 14px;border-radius:10px;outline:none}
+.weight-input:focus{border-color:var(--a)}
+.weight-save-btn{background:var(--a);color:var(--dk);border:none;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:700;padding:10px 18px;border-radius:10px;cursor:pointer;white-space:nowrap;-webkit-tap-highlight-color:transparent}
+.chart-wrap{position:relative;height:220px;margin-bottom:10px}
+.week-bars{display:flex;flex-direction:column;gap:6px}
+.wbar-row{display:flex;align-items:center;gap:8px}
+.wbar-label{font-size:10px;color:var(--mu);min-width:24px;text-align:right}
+.wbar-bg{flex:1;height:14px;background:#1a1a1a;border-radius:99px;overflow:hidden}
+.wbar-fill{height:100%;background:var(--a);border-radius:99px;transition:width .4s}
+.wbar-pct{font-size:10px;color:var(--mu);min-width:28px}
+.timeline{display:flex;overflow-x:auto;padding-bottom:4px;margin-bottom:12px}
+.tl-item{flex:1;text-align:center;position:relative;min-width:55px}
+.tl-item:not(:last-child)::after{content:'';position:absolute;top:14px;left:50%;width:100%;height:2px;background:var(--bd);z-index:0}
+.tl-dot{width:28px;height:28px;border-radius:50%;background:#222;border:2px solid var(--bd);display:flex;align-items:center;justify-content:center;margin:0 auto 6px;font-size:10px;position:relative;z-index:1}
+.tl-dot.done{background:var(--a);border-color:var(--a);color:var(--dk);font-weight:700}
+.tl-label{font-size:10px;color:var(--mu)}
+.tl-val{font-size:11px;font-weight:600;color:#fff;margin-top:2px}
+.rule-row{display:flex;gap:9px;padding:9px 0;border-bottom:1px solid var(--bd);align-items:flex-start}
+.rule-row:last-child{border-bottom:none}
+.rule-num{font-family:'Bebas Neue',Impact,sans-serif;font-size:19px;color:var(--a);min-width:20px;line-height:1.1}
+.rule-text{font-size:12px;line-height:1.5}
+.rr-row{display:flex;gap:9px;padding:10px 0;border-bottom:1px solid var(--bd);align-items:flex-start}
+.rr-row:last-child{border-bottom:none}
+.rr-icon{font-size:17px;min-width:24px}
+.rr-rule{font-weight:600;font-size:12px;margin-bottom:2px}
+.rr-detail{font-size:11px;color:var(--mu);line-height:1.5}
+.warm-step{display:flex;gap:10px;padding:9px 0;border-bottom:1px solid var(--bd);align-items:flex-start}
+.warm-step:last-child{border-bottom:none}
+.warm-num{font-family:'Bebas Neue',Impact,sans-serif;font-size:18px;color:#7090d0;min-width:18px}
+.warm-info .wn{font-size:13px;font-weight:600;color:#fff}
+.warm-info .wd{font-size:11px;color:var(--mu);margin-top:2px;line-height:1.4}
+.warm-step.glute-focus .warm-num{color:#6abf40}
+</style>
+</head>
+<body>
+<div class="app">
+
+<div class="hero">
+  <div class="hero-lbl">Personalised Program — Fahad</div>
+  <div class="hero-title">FAT LOSS<br><span>MADE SIMPLE</span></div>
+  <div class="week-stepper">
+    <button class="step-btn" onclick="changeWeek(-1)">‹</button>
+    <div class="step-mid">
+      <div class="step-week" id="stepWeekLbl">WEEK 4</div>
+      <div class="step-phase" id="stepPhaseLbl">Phase 1 — Foundation</div>
+    </div>
+    <button class="step-btn" onclick="changeWeek(1)">›</button>
+  </div>
+  <div class="today-snap" id="todaySnap"></div>
+</div>
+
+<div class="tabs">
+  <button class="tab active" onclick="switchTab('nutrition',this)">📊 Food</button>
+  <button class="tab" onclick="switchTab('training',this)">💪 Train</button>
+  <button class="tab" onclick="switchTab('running',this)">🏃 Run</button>
+  <button class="tab" onclick="switchTab('schedule',this)">🗓 Week</button>
+  <button class="tab" onclick="switchTab('metrics',this)">📈 Stats</button>
+</div>
+
+<div id="panel-nutrition" class="panel active">
+  <div class="sec-title">NUTRITION</div>
+  <div class="sec-sub">2,300 kcal daily · Flexible dieting</div>
+  <div class="stats-grid">
+    <div class="stat"><div><span class="stat-val">2,900</span><span class="stat-unit">kcal</span></div><div class="stat-label">Your TDEE</div></div>
+    <div class="stat"><div><span class="stat-val">2,300</span><span class="stat-unit">kcal</span></div><div class="stat-label">Daily target</div></div>
+    <div class="stat"><div><span class="stat-val">~0.5</span><span class="stat-unit">kg/wk</span></div><div class="stat-label">Fat loss rate</div></div>
+    <div class="stat"><div><span class="stat-val">~14</span><span class="stat-unit">mo</span></div><div class="stat-label">To 84 kg</div></div>
+  </div>
+  <div class="card">
+    <div class="card-title">Daily Macros</div>
+    <div class="macro-bar"><div class="macro-row"><span class="macro-name">Protein</span><span class="macro-val">200g · 800 kcal</span></div><div class="bar-bg"><div class="bar-fill" style="width:35%;background:#E8FF47"></div></div></div>
+    <div class="macro-bar"><div class="macro-row"><span class="macro-name">Carbohydrates</span><span class="macro-val">215g · 860 kcal</span></div><div class="bar-bg"><div class="bar-fill" style="width:37%;background:#60bfff"></div></div></div>
+    <div class="macro-bar" style="margin-bottom:6px"><div class="macro-row"><span class="macro-name">Fats</span><span class="macro-val">70g · 630 kcal</span></div><div class="bar-bg"><div class="bar-fill" style="width:27%;background:#ff9060"></div></div></div>
+    <div style="font-size:11px;color:var(--mu)">Hit protein first. Carbs and fats can flex.</div>
+  </div>
+  <div class="card">
+    <div class="card-title">Meals — 2 Main + Snack</div>
+    <div class="meal-row"><div class="meal-hd"><div><span class="meal-time">Breakfast</span><span class="meal-tag">Morning</span></div><div class="meal-kcal">~900 kcal</div></div><div class="meal-food">4 eggs + 2–3 roti + full-fat yoghurt + fruit</div><div class="meal-note">Biggest meal. Load protein here.</div></div>
+    <div class="meal-row"><div class="meal-hd"><div><span class="meal-time">Lunch</span><span class="meal-tag">Midday</span></div><div class="meal-kcal">~950 kcal</div></div><div class="meal-food">Chicken/beef + rice or 2 roti + salad + dal</div><div class="meal-note">Don't go light — carries you to evening.</div></div>
+    <div class="meal-row"><div class="meal-hd"><div><span class="meal-time">Evening Snack</span><span class="meal-tag">Pre/post walk</span></div><div class="meal-kcal">~400 kcal</div></div><div class="meal-food">Greek yoghurt + nuts, or halal protein shake + fruit</div><div class="meal-note">Times with your walk. Keeps hunger down overnight.</div></div>
+    <div class="meal-total">~2,250 kcal total · ~50 cal buffer for chai</div>
+  </div>
+  <div class="tip">💡 <strong>Halal protein:</strong> Chicken, beef mince, eggs, Greek yoghurt, lentils, chickpeas. Halal whey fills any gaps.</div>
+  <div class="tip">💡 <strong>Nothing is banned.</strong> Biryani, gulab jamun, chai — account for it, don't fight it.</div>
+</div>
+
+<div id="panel-training" class="panel">
+  <div class="sec-title">TRAINING</div>
+  <div class="sec-sub" id="trainSub">Week 4 — Phase 1 · Foundation</div>
+  <div id="trainContent"></div>
+</div>
+
+<div id="panel-running" class="panel">
+  <div class="sec-title">RUNNING</div>
+  <div class="sec-sub" id="runSub">Week 4 session</div>
+  <div id="runContent"></div>
+</div>
+
+<div id="panel-schedule" class="panel">
+  <div class="sec-title">SCHEDULE</div>
+  <div class="sec-sub">Track your week</div>
+  <div id="schedContent"></div>
+</div>
+
+<div id="panel-metrics" class="panel">
+  <div class="sec-title">METRICS</div>
+  <div class="sec-sub">Adherence + Weight Progress</div>
+  <div id="metricsContent"></div>
+</div>
+
+</div>
+
+<script>
+const P = {
+  bench:         [20,  22.5, 25,   27.5, 30,   32.5, 26,   35,   35,   37.5, 37.5, 40  ],
+  incline:       [6,   6,    7,    7,    8,    8,    6.5,  9,    9,    10,   10,   11  ],
+  shoulderpress: [5,   5,    6,    6,    6,    6,    6,    8,    8,    9,    9,    10  ],
+  laterals:      [2.5, 2.5,  3,    3,    3,    3,    3,    4,    4,    4.5,  4.5,  5   ],
+  pushdown:      [7.5, 7.5,  8.5,  8.5,  10,   10,   8,    11,   11,   12.5, 12.5, 14  ],
+  ohtricep:      [6,   6,    7.5,  7.5,  7.5,  7.5,  7.5,  10,   10,   11,   11,   12.5],
+  pecdeck:       [15,  17.5, 20,   22.5, 25,   27.5, 22,   30,   30,   32.5, 32.5, 35  ],
+  cablefly:      [7.5, 7.5,  10,   10,   12.5, 12.5, 10,   15,   15,   17.5, 17.5, 20  ],
+  legpress:      [40,  50,   60,   70,   80,   90,   55,   100,  100,  110,  110,  120 ],
+  legext:        [15,  15,   17,   17,   20,   20,   16,   22,   22,   25,   25,   27  ],
+  legcurl:       [20,  20,   22,   22,   25,   25,   20,   27,   27,   30,   30,   32  ],
+  goblet:        [16,  16,   20,   20,   24,   24,   20,   28,   28,   32,   32,   36  ],
+  calfseated:    [20,  20,   25,   25,   30,   30,   24,   35,   35,   40,   40,   45  ],
+  pulldown:      [17,  18,   20,   21,   22.5, 23.5, 19,   25,   25,   26,   26,   27.5],
+  cablerow:      [15,  16,   17.5, 18.5, 20,   21,   17,   22.5, 22.5, 23.5, 23.5, 25  ],
+  tbar:          [10,  12.5, 15,   17.5, 20,   22.5, 17.5, 25,   27.5, 30,   32.5, 35  ],
+  chestsuprow:   [15,  16,   17.5, 18.5, 20,   21,   17,   22.5, 22.5, 23.5, 23.5, 25  ],
+  facepull:      [5,   5.5,  6,    7,    8,    9,    7,    10,   11,   12,   12.5, 13  ],
+  curl:          [5,   5,    6,    6,    7,    7,    5.5,  7.5,  7.5,  8.5,  8.5,  10  ],
+  hammercurl:    [5,   5,    6,    6,    7,    7,    5.5,  7.5,  7.5,  8.5,  8.5,  10  ],
+  deadlift:      [60,  65,   70,   75,   80,   85,   68,   90,   90,   95,   95,   100 ],
+  rdl:           [40,  45,   50,   52,   55,   57,   46,   60,   60,   62,   65,   67  ],
+  hipthrust:     [40,  50,   60,   70,   80,   90,   72,   100,  100,  110,  110,  120 ],
+  thighabductor: [20,  22.5, 25,   27.5, 30,   32.5, 25,   35,   35,   40,   40,   45  ],
+  nordiccurl:    [20,  20,   22,   22,   25,   25,   20,   27,   27,   30,   30,   32  ],
+  singlelegpress:[30,  35,   40,   45,   50,   55,   44,   60,   60,   65,   65,   70  ],
+  calfstand:     [30,  30,   35,   35,   40,   40,   32,   45,   45,   50,   50,   55  ],
+};
+
+const PHASES = [
+  {weeks:[1,2,3,4], label:'Phase 1 — Foundation', short:'Foundation'},
+  {weeks:[5,6,7,8], label:'Phase 2 — Load Build', short:'Load Build'},
+  {weeks:[9,10,11,12], label:'Phase 3 — Strength', short:'Strength'},
+];
+function getPhase(w){ return PHASES.find(p=>p.weeks.includes(w))||PHASES[0]; }
+
+const RUN_PHASES = [
+  {weeks:[1,2], phase:'Phase 1', title:'Re-entry', session:'Run 2 min / Walk 2 min × 8 rounds', dist:'~3.5 km',
+   detail:'Your lungs recover before your joints do. Do not push pace. At 115 kg this phase re-conditions tendons and the hip complex before loading them further.'},
+  {weeks:[3,4], phase:'Phase 2', title:'Building Base', session:'Run 3 min / Walk 1 min × 7 rounds', dist:'~4 km',
+   detail:'Pace should be fully conversational — if you cannot complete a sentence, slow down. No heroics.'},
+  {weeks:[5,6,7], phase:'Phase 3', title:'Continuous Run', session:'20–25 min continuous easy run', dist:'~4–4.5 km',
+   detail:'First time running without walk breaks. Keep it very easy.'},
+  {weeks:[8,9,10,11], phase:'Phase 4', title:'5K Build', session:'30 min continuous, 3× per week', dist:'~5 km',
+   detail:'By now you\'ll be ~108 kg — significantly easier on every joint.'},
+  {weeks:[12], phase:'Phase 5 — Preview', title:'Approaching 10K', session:'Long run Sat + two shorter runs midweek', dist:'Build toward 7–8 km',
+   detail:'At ~109 kg your old 10K form returns quickly.'},
+];
+function getRunPhase(w){ return RUN_PHASES.find(rp=>rp.weeks.includes(w))||RUN_PHASES[0]; }
+
+const SCHED_DATA = [
+  {key:'mon',day:'Monday',type:'gym',icon:'💪',label:'Day 1 — Upper Push'},
+  {key:'tue',day:'Tuesday',type:'gym',icon:'💪',label:'Day 2 — Lower Quad'},
+  {key:'wed',day:'Wednesday',type:'run',icon:'🏃',label:'Run Session'},
+  {key:'thu',day:'Thursday',type:'gym',icon:'💪',label:'Day 3 — Upper Pull'},
+  {key:'fri',day:'Friday',type:'gym',icon:'💪',label:'Day 4 — Lower Hip'},
+  {key:'sat',day:'Saturday',type:'run',icon:'🏃',label:'Run Session'},
+  {key:'sun',day:'Sunday',type:'rest',icon:'😴',label:'Rest + Walk'},
+];
+
+// hold:true = greyed out + HOLD tag. sub = replacement exercise text.
+const EXERCISES = {
+  d1:[
+    {name:'Barbell Bench Press',sets:'4 × 8',key:'bench',unit:'kg (barbell total)',note:'Controlled descent, 2-sec pause at chest.',apt:'APT cue: brace your core and press your lower back gently toward neutral.',shoulder:'Shoulder: Two sessions pain-free — continue. Stop the set immediately if the deep left shoulder sensation returns.'},
+    {name:'Incline Dumbbell Press',sets:'3 × 10',key:'incline',unit:'kg each dumbbell',note:'45° incline. Full stretch at the bottom.',shoulder:'Shoulder: Progressing normally. Stop if pain returns at shoulder height.'},
+    {name:'Pec Deck / Butterfly Machine',sets:'3 × 12',key:'pecdeck',unit:'kg (stack)',note:'Shoulder-safe — movement stays below shoulder height, zero impingement risk. Squeeze at the peak, controlled return.',shoulder:'Shoulder: This is your safest chest isolation. Replaces lateral raises during shoulder rehab period.'},
+    {name:'Cable Fly (low/mid cable)',sets:'3 × 12',key:'cablefly',unit:'kg each side',note:'Low or mid cable only — do NOT use high cable (arms coming down from above triggers impingement). Cross hands slightly at the peak.',shoulder:'Shoulder: Low and mid angles are safe. High cable fly = hold until cleared.'},
+    {name:'Seated DB Shoulder Press',sets:'3 × 10',key:'shoulderpress',unit:'kg each dumbbell',note:'Weight frozen at 6 kg for weeks 4–7 while shoulder stabilises. Focus on full range and controlled tempo, not load.',shoulder:'Shoulder: 4-week progression freeze (W4–W7). Resumes normal progression at W8. Two sessions pain-free — good sign. Stop if pain returns.'},
+    {name:'Cable Lateral Raises',sets:'3 × 14',key:'laterals',unit:'kg each side',note:'Weight frozen at 3 kg for weeks 4–7. Keep arm below shoulder height on the raise — stopping at ear level reduces impingement risk.',shoulder:'Shoulder: 4-week progression freeze (W4–W7). Resumes at W8. Cable at floor level, arm stays below shoulder height.'},
+    {name:'Tricep Rope Pushdown',sets:'3 × 12',key:'pushdown',unit:'kg (stack)',note:'Shoulder stays neutral — safe and progressing normally. Spread the rope at the bottom.'},
+    {name:'Overhead Tricep Extension',sets:'3 × 12',key:'ohtricep',unit:'kg (stack)',note:'Weight frozen at 7.5 kg for weeks 4–7. If any shoulder discomfort, swap to Close-Grip Pushdown instead.',shoulder:'Shoulder: 4-week progression freeze (W4–W7). Resumes at W8. Alternative: Close-Grip Pushdown at same weight.'},
+  ],
+  d2:[
+    {name:'Leg Press',sets:'4 × 12',key:'legpress',unit:'kg plates to load (+ 45 kg sled = total)',knee:true,note:'Limit range to 90°. Do NOT let knees cave inward. Feet shoulder-width.',apt:'APT cue: brace core before each rep — anterior tilt + leg press = lower back compensation.'},
+    {name:'Leg Extension (light)',sets:'3 × 15',key:'legext',unit:'kg (stack)',knee:true,note:'Light weight always — this strengthens the VMO which directly reduces your knee tightness.'},
+    {name:'Seated Leg Curl',sets:'3 × 12',key:'legcurl',unit:'kg (stack)',note:'Full range of motion. Antagonist balance for the knee.'},
+    {name:'Goblet Squat',sets:'3 × 12',key:'goblet',unit:'kg (one dumbbell)',knee:true,note:'Heels elevated on plates. Stop at parallel — no deeper.',apt:'APT cue: brace the anterior core hard. Tight hip flexors will pull you into forward lean.'},
+    {name:'Seated Calf Raise',sets:'4 × 15',key:'calfseated',unit:'kg (stack)',note:'Full stretch at bottom. Pause at the top.'},
+    {name:'Dead Bug',sets:'3 × 10 each side',key:'',unit:'bodyweight',note:'Replaces Cable Crunch. Lie on back, knees 90°, arms up. Lower opposite arm + leg slowly — do NOT let lower back arch off floor. Reset and repeat.',apt:'APT fix: this directly trains the deep core (TVA) that cable crunches failed to reach due to your APT. Lower back stays in contact with the floor the whole time — that\'s the cue.'},
+    {name:'Hollow Hold',sets:'3 × 20–30 sec',key:'',unit:'bodyweight',note:'After Dead Bugs. Lie on back, press lower back into floor, lift shoulders and legs slightly. Hold the position. If lower back lifts, bend knees. This trains anti-extension — the exact deficit APT creates.',apt:'APT fix: the goal is lumbar flexion under load. This is more effective than cable crunches for your specific pattern right now.'},
+  ],
+  d3:[
+    {name:'Lat Pulldown (wide grip)',sets:'4 × 10',key:'pulldown',unit:'kg (stack)',note:'Pull to upper chest. Don\'t lean back excessively. Monitor left shoulder — if pain appears, reduce weight and shorten range.'},
+    {name:'Seated Cable Row (close grip)',sets:'3 × 10',key:'cablerow',unit:'kg (stack)',note:'Shoulder stays neutral throughout. Elbows close to body. Squeeze shoulder blades at the back.'},
+    {name:'T-Bar Row (chest supported)',sets:'3 × 10',key:'tbar',unit:'kg plates loaded',note:'Use the 45° neutral grip — not the straight grip. Chest stays pinned to the pad throughout. Drive elbows back and down, not just back. Squeeze shoulder blades at the top.',shoulder:'Shoulder: The 45° neutral grip keeps the shoulder out of the impingement position. Do NOT use the straight pronated grip.'},
+    {name:'Chest Supported Machine Row',sets:'3 × 10',key:'chestsuprow',unit:'kg (stack)',note:'Alternative to T-Bar on days the left shoulder feels more irritated. Fixed path, zero spinal load, fully safe for the shoulder. Push the handles horizontally, full stretch at the front.',shoulder:'Shoulder: Use this instead of T-Bar if any shoulder sensitivity on the day.'},
+    {name:'Face Pull (rope, cable) ⭐',sets:'3 × 15',key:'facepull',unit:'kg (stack)',note:'PRIORITY exercise — progressing weekly faster than normal during the shoulder rehab period. Pull to ears, not chin. Elbows high and wide at the peak.',shoulder:'Shoulder: This is your primary rotator cuff strengthening exercise. Do not skip or treat as optional. Increasing weight every week.'},
+    {name:'Barbell / Dumbbell Curl',sets:'3 × 12',key:'curl',unit:'kg (bar or each DB)',note:'No shoulder involvement. Don\'t swing. Supinate at the top.'},
+    {name:'Hammer Curl',sets:'3 × 12',key:'hammercurl',unit:'kg each dumbbell',note:'Neutral grip. Targets brachialis for arm thickness.'},
+  ],
+  d4:[
+    {name:'Conventional Deadlift',sets:'4 × 6',key:'deadlift',unit:'kg (barbell total)',knee:true,note:'Hinge at hips, neutral spine. Knees track over toes.',apt:'APT cue: do NOT hyperextend at the top. Lock out tall, squeeze glutes, stand straight.'},
+    {name:'Romanian Deadlift (RDL)',sets:'3 × 10',key:'rdl',unit:'kg (barbell total)',note:'Slow hinge — feel the hamstring stretch. Bar stays close to legs.',apt:'APT cue: think "long spine" not "arched back". APT makes it easy to over-arch in this position.'},
+    {name:'Hip Thrust (barbell)',sets:'4 × 10',key:'hipthrust',unit:'kg (barbell total)',note:'Shoulders on bench, drive through heels. Zero knee stress.',apt:'APT cue: at the top, actively tuck the pelvis — posterior tilt. Don\'t arch the lower back at the top.',piri:'Piriformis note: on flare-up days reduce weight by 30–40% and focus on the squeeze, not the load.',glute:'Left glute focus: pause 1 second at the top of every rep. Confirm you feel the LEFT glute specifically contracting — not just the hamstring. If you can\'t feel it, reduce weight and slow the rep. Hip thrust is your primary left glute retraining exercise.'},
+    {name:'Nordic Curl / Lying Leg Curl',sets:'3 × 10',key:'nordiccurl',unit:'kg (stack)',note:'Slow eccentric. Hamstring strength is your best knee insurance.'},
+    {name:'Thigh Abductor Machine',sets:'3 × 15',key:'thighabductor',unit:'kg (stack)',note:'Slow and controlled — corrective exercise, not a strength movement. Note the gap between left and right side and track it closing over weeks.',glute:'Left glute focus: directly targets glute med — the inhibited muscle driving your entire left-side compensation chain. Left side will likely be weaker than right. That gap closing week to week = the fix working.'},
+    {name:'Single-Leg Press (light)',sets:'3 × 10 each',key:'singlelegpress',unit:'kg (plate load)',knee:true,note:'Controlled. If knee tightness flares, skip it.'},
+    {name:'Standing Calf Raise',sets:'4 × 15',key:'calfstand',unit:'kg (stack)',note:'Full range. Pause at top and bottom.'},
+  ],
+};
+
+const DAY_DEFS = [
+  {badge:'DAY 1', title:'Upper — Push',      focus:'Chest · Shoulders · Triceps',       key:'d1', dayKey:'mon'},
+  {badge:'DAY 2', title:'Lower — Quad Focus', focus:'Quads · Calves · Core',             key:'d2', dayKey:'tue'},
+  {badge:'DAY 3', title:'Upper — Pull',       focus:'Back · Biceps · Rear Delts',        key:'d3', dayKey:'thu'},
+  {badge:'DAY 4', title:'Lower — Hip Focus',  focus:'Glutes · Hamstrings · Posterior',   key:'d4', dayKey:'fri'},
+];
+
+let S = {week:4, trainDay:1, done:{}, weights:{}};
+
+function calcAutoWeek(){
+  const start = new Date('2026-04-27');
+  const now = new Date();
+  const diff = Math.floor((now - start) / (7*24*60*60*1000)) + 1;
+  return Math.max(1, Math.min(12, diff));
+}
+
+function save(){ try{localStorage.setItem('fp5', JSON.stringify(S));}catch(e){} }
+function load(){
+  try{const d=localStorage.getItem('fp5'); if(d){ S=JSON.parse(d); } else { S.week = calcAutoWeek(); }}catch(e){ S.week = calcAutoWeek(); }
+  if(!S.weights.historical) S.weights.historical = [
+    {date:'2024-11-07',kg:103.0},{date:'2024-11-15',kg:101.8},{date:'2024-11-25',kg:101.7},
+    {date:'2024-12-04',kg:101.7},{date:'2024-12-25',kg:104.1},{date:'2024-12-30',kg:101.9},
+    {date:'2025-01-31',kg:105.0},{date:'2025-04-01',kg:110.0},{date:'2025-08-04',kg:113.3},
+    {date:'2025-12-12',kg:117.6},{date:'2026-01-19',kg:119.6},{date:'2026-01-31',kg:117.0},
+    {date:'2026-02-13',kg:114.5},{date:'2026-02-25',kg:113.3},{date:'2026-03-09',kg:114.8},
+    {date:'2026-03-22',kg:115.4},{date:'2026-04-15',kg:115.3},
+  ];
+  if(!S.trainDay) S.trainDay = todayGymDay();
+}
+function todayGymDay(){
+  const map = {1:1, 2:2, 4:3, 5:4};
+  return map[new Date().getDay()] || 1;
+}
+
+function changeWeek(delta){
+  const nw = Math.max(1, Math.min(12, S.week + delta));
+  if(nw === S.week) return;
+  S.week = nw; save(); refreshAll();
+}
+function changeDay(delta){
+  const nd = Math.max(1, Math.min(4, S.trainDay + delta));
+  if(nd === S.trainDay) return;
+  S.trainDay = nd; save(); renderTraining();
+}
+
+function refreshAll(){
+  const w = S.week;
+  const ph = getPhase(w);
+  document.getElementById('stepWeekLbl').textContent = 'WEEK ' + w;
+  document.getElementById('stepPhaseLbl').textContent = ph.label;
+  updateTodaySnap();
+  renderTraining();
+  renderRunning();
+  renderSchedule();
+  const mp = document.getElementById('panel-metrics');
+  if(mp && mp.classList.contains('active')) renderMetrics();
+}
+
+function updateTodaySnap(){
+  const days = ['sun','mon','tue','wed','thu','fri','sat'];
+  const tod = days[new Date().getDay()];
+  const d = SCHED_DATA.find(x=>x.key===tod)||SCHED_DATA[6];
+  const doneKey = 'w'+S.week+'-'+d.key;
+  const isDone = !!S.done[doneKey];
+  document.getElementById('todaySnap').innerHTML = `
+    <div class="today-icon">${d.icon}</div>
+    <div style="flex:1">
+      <div class="today-label">Today · Week ${S.week}</div>
+      <div class="today-session">${d.label}</div>
+    </div>
+    ${d.type!=='rest'?`<button class="today-done${isDone?' done':''}" onclick="toggleTodayDone('${d.key}')">${isDone?'✓ Done':'Mark done'}</button>`:'<span style="font-size:11px;color:var(--mu)">Rest day</span>'}
+  `;
+}
+function toggleTodayDone(key){
+  const doneKey = 'w'+S.week+'-'+key;
+  S.done[doneKey] = !S.done[doneKey];
+  save(); updateTodaySnap(); renderSchedule();
+}
+
+function w(key){ return P[key] ? P[key][S.week-1] : '—'; }
+
+function renderExercises(list){
+  return list.map((e,i)=>{
+    const kTag = e.knee ? '<span class="knee-tag">knee</span>':'';
+    const holdTag = e.hold ? '<span class="ex-hold-tag">HOLD</span>':'';
+    const aptBlock = e.apt ? `<div class="ex-apt">🟢 ${e.apt}</div>`:'';
+    const piriBlock = e.piri ? `<div class="ex-piri">🟣 ${e.piri}</div>`:'';
+    const gluteBlock = e.glute ? `<div class="ex-glute">🟢 ${e.glute}</div>`:'';
+    const shoulderBlock = e.shoulder ? `<div class="ex-shoulder">🔴 ${e.shoulder}</div>`:'';
+    const weightDisplay = e.key ? `<span class="kg">${w(e.key)} kg</span><span class="ex-unit">${e.unit}</span>` : `<span style="font-size:12px;color:var(--mu)">${e.unit}</span>`;
+    return `<div class="ex-row${e.hold?' ex-hold':''}">
+      <div class="ex-num">${i+1}</div>
+      <div class="ex-info">
+        <div class="ex-name">${e.name}${kTag}${holdTag}</div>
+        <div class="ex-sets">${e.sets}</div>
+        <div class="ex-weight">${weightDisplay}</div>
+        <div class="ex-note">${e.note}</div>
+        ${aptBlock}${piriBlock}${gluteBlock}${shoulderBlock}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function renderTraining(){
+  const dd = DAY_DEFS[S.trainDay - 1];
+  const isDeload = S.week === 7;
+  document.getElementById('trainSub').textContent = `Week ${S.week} · ${dd.title}`;
+
+  let html = `
+  <div class="day-stepper">
+    <button class="step-btn${S.trainDay<=1?' step-dim':''}" onclick="changeDay(-1)">‹</button>
+    <div class="step-mid">
+      <div style="margin-bottom:4px"><span class="acc-badge gym-badge" style="font-size:13px;padding:4px 12px">${dd.badge}</span></div>
+      <div style="font-weight:700;font-size:15px;color:#fff">${dd.title}</div>
+      <div style="font-size:11px;color:var(--mu);margin-top:2px">${dd.focus}</div>
+    </div>
+    <button class="step-btn${S.trainDay>=4?' step-dim':''}" onclick="changeDay(1)">›</button>
+  </div>`;
+
+  if(isDeload){
+    html += `<div class="warn">⚠️ <strong>Week 7 — Deload.</strong> All weights ~20% lighter. Planned recovery — you'll come back stronger weeks 8–12.</div>`;
+  }
+
+  // CONDITIONS
+  html += `<div class="acc">
+    <div class="acc-hdr" onclick="toggleAcc(this)">
+      <span class="acc-badge cond-badge">CONDITIONS</span>
+      <span class="acc-title">APT · Piriformis · Knee · Left Glute · Shoulder</span>
+      <span class="chev">▾</span>
+    </div>
+    <div class="acc-body">
+      <div class="info" style="margin-bottom:8px"><strong>Anterior Pelvic Tilt (APT):</strong> Tight hip flexors + weak glutes/abs. 🟢 Green cues on exercises address this. The warm-up below directly targets it.</div>
+      <div class="info" style="margin-bottom:8px"><strong>Piriformis (bilateral):</strong> Running is safe. On flare: shorten walks, run normally, reduce hip thrust weight 30–40%. Note: consciously tucking the pelvis mid-run triggers both piriformis — they are substituting for the inhibited glutes. Use "tall spine" and "soft core" cues instead (see Run tab).</div>
+      <div class="info" style="margin-bottom:8px"><strong>Left knee tightness:</strong> Exercises tagged <span style="background:#1a1100;border:1px solid #4a3000;color:#e0a040;padding:1px 5px;border-radius:4px;font-size:10px">knee</span> have modified instructions. VMO strengthening + hamstring work = long-term fix.</div>
+      <div style="background:#0a1a0a;border:1px solid #2a6a10;border-radius:8px;padding:10px;font-size:12px;color:#a0d070;line-height:1.6;margin-bottom:8px">
+        <strong style="color:#6abf40">🟢 Left Glute Inhibition — Found Week 2:</strong> Left glute not firing during bridges — hamstring and quad compensate. Root cause of entire left-side chain: piriformis overworks and flares, hamstring DOMS skews left, mid-calf tightens differently, lower back fatigues at run end, gait shifts weight onto left foot. Left glute activation warm-up protocol below targets this directly. Expect 2–4 weeks before it fires reliably.
+      </div>
+      <div style="background:#0f1505;border:1px solid #4a5010;border-radius:8px;padding:10px;font-size:12px;color:#d0c060;line-height:1.6">
+        <strong style="color:#e0d040">🟡 Left Shoulder — Monitoring (W4 onwards):</strong> Was on hard hold after severe flare (couldn't sleep on left side, couldn't support getting up). Two consecutive sessions pain-free in W4/W5. Holds removed. <strong>Overhead press, laterals, and overhead tricep extension have a 4-week weight freeze (W4–W7)</strong> — same weight, focus on form. Normal progression resumes W8. Face pulls progressing weekly as priority rotator cuff work. Rotator cuff external rotation added to Day 1 warm-up. If pain returns at any point: stop the set, drop to previous weight, report back.
+      </div>
+    </div>
+  </div>`;
+
+  // WARM-UP
+  html += `<div class="acc">
+    <div class="acc-hdr" onclick="toggleAcc(this)">
+      <span class="acc-badge" style="background:#1a0a2e;border:1px solid #4a2a8a;color:#a080e0">WARM-UP</span>
+      <span class="acc-title">Before Every Session — 13 min</span>
+      <span class="chev">▾</span>
+    </div>
+    <div class="acc-body">
+      <div class="note" style="margin-bottom:10px"><strong>Do not skip this.</strong> For APT + piriformis + knee + left glute inhibition, this warm-up is structural treatment, not optional prep.</div>
+      <div class="warm-step"><div class="warm-num">1</div><div class="warm-info"><div class="wn">Bike/Elliptical — 5 min</div><div class="wd">Easy pace. Warms joints, activates glutes mildly, lubricates the knee.</div></div></div>
+      <div class="warm-step"><div class="warm-num">2</div><div class="warm-info"><div class="wn">Kneeling Hip Flexor Stretch — 60s each side</div><div class="wd">Kneeling lunge, tall spine, gentle forward lean. <strong>APT fix #1</strong> — tight psoas is the primary driver of your anterior tilt.</div></div></div>
+      <div class="warm-step"><div class="warm-num">3</div><div class="warm-info"><div class="wn">Standing Pigeon / Figure-4 — 45s each side</div><div class="wd">Your piriformis stretch. Do before every session, not just on flare days.</div></div></div>
+      <div class="warm-step"><div class="warm-num">4</div><div class="warm-info"><div class="wn">Dead Bug — 3 × 8 each side</div><div class="wd">Lie on back, knees 90°, arms up. Lower opposite arm + leg without lower back arching. <strong>APT fix #2.</strong></div></div></div>
+      <div style="background:#0a1a0a;border:1px solid #2a6a10;border-radius:8px;padding:10px;margin:8px 0">
+        <div style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:#6abf40;margin-bottom:8px;font-weight:700">🟢 LEFT GLUTE ACTIVATION — Do before bridges</div>
+        <div class="warm-step glute-focus" style="border-bottom:1px solid #1a3a10;padding-bottom:8px;margin-bottom:0"><div class="warm-num">5a</div><div class="warm-info"><div class="wn">Clamshell — Left side only, 20 reps slow</div><div class="wd">Lie on right side, knees bent 45°, feet together. Rotate left knee up. Feel the burn in the <em>outer left glute</em> specifically — not the hip flexor. If you feel it in the wrong place, slow down further.</div></div></div>
+        <div class="warm-step glute-focus" style="border-bottom:none"><div class="warm-num">5b</div><div class="warm-info"><div class="wn">Side-Lying Hip Abduction — Left side only, 15 reps</div><div class="wd">Same position, straighten top leg, lift toward ceiling. Slow and controlled. Together with the clamshell, this wakes the left glute med before it has to work.</div></div></div>
+      </div>
+      <div class="warm-step" style="border-bottom:none"><div class="warm-num">6</div><div class="warm-info"><div class="wn">Bodyweight Glute Bridge — 2 × 20</div><div class="wd">After 5a+5b the left glute should fire here. Consciously think <strong>"left cheek"</strong> each rep. Pause at the top — posterior tilt, left glute specifically engaged. If still can't feel it, do 5 single-leg bridges on the left to isolate.</div></div></div>
+      <div style="background:#1a0a1a;border:1px solid #5a1a5a;border-radius:8px;padding:10px;margin-top:8px">
+        <div style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:#c060c0;margin-bottom:8px;font-weight:700">🔴 DAY 1 ONLY — Shoulder Rehab Warm-Up</div>
+        <div class="warm-step" style="border-bottom:none"><div class="warm-num" style="color:#c060c0">7</div><div class="warm-info"><div class="wn">Cable/Band External Rotation — 3 × 15 each side</div><div class="wd">Stand side-on to a low cable or use a resistance band. Elbow bent 90°, pinned to your side. Rotate your forearm outward away from your body. Slow and controlled — this is rotator cuff rehab, not a strength set. Very light resistance. This directly addresses the stability deficit behind the shoulder flares.</div></div></div>
+      </div>
+    </div>
+  </div>`;
+
+  html += `<div class="day-ex-card">
+    ${renderExercises(EXERCISES[dd.key])}
+    <div class="cardio-note">+ 20 min pyramid treadmill after lifting: 4→7 km/h over 6 min, 7→4.5 over 5 min, hold 4.5 km/h for remainder. See Run tab for full breakdown.</div>
+  </div>`;
+
+  html += `<div class="info" style="margin-top:8px;font-size:11px">🟢 APT / glute cues &nbsp;·&nbsp; 🟣 Piriformis notes &nbsp;·&nbsp; 🔴 Shoulder hold &nbsp;·&nbsp; <span style="background:#1a1100;border:1px solid #4a3000;color:#e0a040;padding:1px 4px;border-radius:3px;font-size:9px">knee</span> modified</div>`;
+
+  document.getElementById('trainContent').innerHTML = html;
+}
+
+function renderRunning(){
+  const rp = getRunPhase(S.week);
+  document.getElementById('runSub').textContent = `Week ${S.week} — ${rp.phase}`;
+
+  let html = '';
+
+  // HR ZONES CARD
+  html += `<div class="card">
+    <div class="card-title">Your Heart Rate Zones — Measured Week 4</div>
+    <div style="font-size:11px;color:var(--mu);margin-bottom:10px">Max HR ~184 bpm (36M) · Data: 150 bpm @ 6.5 km/h · 170 bpm @ 8 km/h</div>
+    <div style="display:flex;flex-direction:column;gap:6px">
+      <div style="background:#0a1a0a;border-radius:8px;padding:9px 12px;border-left:3px solid #4a9a20">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <span style="font-size:12px;font-weight:600;color:#6abf40">Zone 2 — Fat Burn</span>
+          <span style="font-size:12px;color:#6abf40;font-weight:700">110–129 bpm</span>
+        </div>
+        <div style="font-size:11px;color:var(--mu);margin-top:3px">~4.5–5 km/h · Brisk walk territory. Primary fat burning zone. Use for recovery days.</div>
+      </div>
+      <div style="background:#0a120f;border-radius:8px;padding:9px 12px;border-left:3px solid #209a6a">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <span style="font-size:12px;font-weight:600;color:#40bf9a">Zone 3 — Aerobic</span>
+          <span style="font-size:12px;color:#40bf9a;font-weight:700">130–147 bpm</span>
+        </div>
+        <div style="font-size:11px;color:var(--mu);margin-top:3px">~5–6 km/h · Good base building. Target for steady state runs and pyramid mid-sections.</div>
+      </div>
+      <div style="background:#1a1200;border-radius:8px;padding:9px 12px;border-left:3px solid #9a7a20">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <span style="font-size:12px;font-weight:600;color:#e0b840">Zone 4 — Threshold</span>
+          <span style="font-size:12px;color:#e0b840;font-weight:700">148–166 bpm</span>
+        </div>
+        <div style="font-size:11px;color:var(--mu);margin-top:3px">~6.5–7.5 km/h · 6.5 km/h puts you here. Hard effort — use sparingly, not for long steady runs.</div>
+      </div>
+      <div style="background:#1a0a0a;border-radius:8px;padding:9px 12px;border-left:3px solid #9a2020">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <span style="font-size:12px;font-weight:600;color:#e06060">Zone 5 — Max</span>
+          <span style="font-size:12px;color:#e06060;font-weight:700">167+ bpm</span>
+        </div>
+        <div style="font-size:11px;color:var(--mu);margin-top:3px">~8 km/h · 170 bpm here = near max. Only for short intervals. Not a steady pace.</div>
+      </div>
+    </div>
+  </div>`;
+
+  // TWO SESSION TYPES
+  html += `<div class="card">
+    <div class="card-title">Dedicated Run Days — Choose Your Session</div>
+
+    <div style="background:#0f1a0f;border:1px solid #2a4a2a;border-radius:10px;padding:12px;margin-bottom:10px">
+      <div style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:#7090ff;font-weight:700;margin-bottom:6px">JAPANESE WALK — Interval Protocol</div>
+      <div style="font-family:'Bebas Neue',Impact,sans-serif;font-size:19px;color:var(--a);margin-bottom:4px">${rp.session}</div>
+      <div style="display:inline-block;background:#111;border:1px solid var(--bd);border-radius:5px;padding:3px 8px;font-size:11px;color:#7090ff;margin-bottom:8px">📍 ${rp.dist}</div>
+      <div style="font-size:12px;color:var(--mu);line-height:1.6">Run intervals at Zone 3–4 (5.5–6.5 km/h). Walk intervals at Zone 2 (4.5 km/h). Use on fresh legs days.</div>
+    </div>
+
+    <div style="background:#0f150f;border:1px solid #2a3a2a;border-radius:10px;padding:12px">
+      <div style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:#40bf9a;font-weight:700;margin-bottom:6px">STEADY STATE — 40 min</div>
+      <div style="font-family:'Bebas Neue',Impact,sans-serif;font-size:19px;color:var(--a);margin-bottom:4px">40 min continuous at 5–5.5 km/h</div>
+      <div style="display:inline-block;background:#111;border:1px solid var(--bd);border-radius:5px;padding:3px 8px;font-size:11px;color:#40bf9a;margin-bottom:8px">📍 Zone 3 · ~3.5–4 km</div>
+      <div style="font-size:12px;color:var(--mu);line-height:1.6">Use on DOMS days or when fatigued. 5–5.5 km/h keeps HR in Zone 3 (~130–140 bpm). More productive for fat loss than grinding Zone 4 with tired legs. Start at 4 km/h for 3–4 min warm-up, then settle.</div>
+    </div>
+  </div>`;
+
+  // TRAINING DAY PYRAMID
+  html += `<div class="card">
+    <div class="card-title">Training Day Cardio — Post-Gym Pyramid</div>
+    <div style="font-size:12px;color:var(--mu);margin-bottom:10px">Done after every gym session · 20 min · Treadmill</div>
+    <div style="display:flex;flex-direction:column;gap:4px;margin-bottom:10px">
+      <div style="display:flex;align-items:center;gap:8px">
+        <div style="font-size:10px;color:var(--mu);min-width:60px">0–6 min</div>
+        <div style="flex:1;height:8px;background:linear-gradient(to right,#1a2a4a,#4a6aaa);border-radius:99px"></div>
+        <div style="font-size:11px;color:#7090ff;min-width:70px">4→7 km/h ↑</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px">
+        <div style="font-size:10px;color:var(--mu);min-width:60px">6–11 min</div>
+        <div style="flex:1;height:8px;background:linear-gradient(to right,#4a6aaa,#1a3a2a);border-radius:99px"></div>
+        <div style="font-size:11px;color:#40bf9a;min-width:70px">7→4.5 km/h ↓</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px">
+        <div style="font-size:10px;color:var(--mu);min-width:60px">11–20 min</div>
+        <div style="flex:1;height:8px;background:#1a2a1a;border-radius:99px"></div>
+        <div style="font-size:11px;color:#6abf40;min-width:70px">4.5 km/h hold</div>
+      </div>
+    </div>
+    <div style="font-size:11px;color:var(--mu);line-height:1.6">Peak at 7 km/h = Zone 4 briefly (~160 bpm). Majority of session in Zone 2–3. Built-in warm-up and cool-down. Smart structure.</div>
+  </div>`;
+
+  html += `<div class="note"><strong>Piriformis and running:</strong> Running does NOT trigger your piriformis. Continue as programmed even during mild flares. Only shorten the walks on flare days, not the running intervals.</div>`;
+
+  html += `<div class="warn">⚠️ <strong>Left-side compensation chain — Week 2 finding:</strong> Left glute not firing means the left hamstring, piriformis, and calf all carry extra load during runs.<br><br>
+  • <strong>Left calf tightens mid-calf</strong> (not near the tendon like the right) = left glute not propelling. Cue: drive through the left heel each stride.<br>
+  • <strong>Piriformis flares mid-run</strong> = stop, 30s figure-4 stretch, continue at reduced pace.<br>
+  • <strong>Lower back tightens in later intervals</strong> = APT increasing under fatigue. Use "tall spine" cue — do NOT tuck.<br>
+  • <strong>Left foot tracks directly beneath you</strong> while right foot goes wide = left glute med not stabilising the pelvis. Warm-up protocol is the fix.</div>`;
+
+  html += `<div class="tip">💡 <strong>APT running cues — updated:</strong> Do NOT consciously tuck the pelvis mid-run. Tucking triggers both piriformis bilaterally.<br><br>
+  Use these instead:<br>
+  • <strong>"Tall spine"</strong> — lengthen upward from the crown. Reduces arch without loading the piriformis.<br>
+  • <strong>"Soft core"</strong> — light brace, like bracing for a gentle tap to the stomach.</div>`;
+
+  html += `<div class="card" style="margin-top:4px">
+    <div class="card-title">Running rules</div>
+    <div class="rr-row"><div class="rr-icon">👟</div><div><div class="rr-rule">Shoes first</div><div class="rr-detail">Over 18 months old? Replace them. At 115 kg cushioning degrades fast.</div></div></div>
+    <div class="rr-row"><div class="rr-icon">🌡️</div><div><div class="rr-rule">Warm up every run</div><div class="rr-detail">5 min brisk walk + piriformis stretch + leg swings before you start running.</div></div></div>
+    <div class="rr-row"><div class="rr-icon">💓</div><div><div class="rr-rule">Use HR not pace as your guide</div><div class="rr-detail">Zone 3 (130–147 bpm) is your training target. Pace will naturally increase over weeks as fitness improves at the same HR.</div></div></div>
+    <div class="rr-row"><div class="rr-icon">📉</div><div><div class="rr-rule">10% rule</div><div class="rr-detail">Never increase weekly distance more than 10%. Connective tissue adapts slower than fitness.</div></div></div>
+    <div class="rr-row"><div class="rr-icon">🛑</div><div><div class="rr-rule">Pain vs tightness</div><div class="rr-detail">Tightness = warm up and continue. Sharp pain = stop immediately.</div></div></div>
+  </div>`;
+
+  document.getElementById('runContent').innerHTML = html;
+}
+
+let schedViewWeek = 0;
+function renderSchedule(){
+  const vw = schedViewWeek || S.week;
+  const planned = SCHED_DATA.filter(d=>d.type!=='rest').length;
+  const completedThisWeek = SCHED_DATA.filter(d=>d.type!=='rest' && S.done['w'+vw+'-'+d.key]).length;
+  const pct = Math.round((completedThisWeek/planned)*100);
+
+  let html = `
+    <div class="week-nav">
+      <button class="week-nav-btn" onclick="schedNav(-1)">‹ Week ${Math.max(1,vw-1)}</button>
+      <div style="text-align:center">
+        <div class="week-nav-label">WEEK ${vw}</div>
+        <div class="week-adherence">${completedThisWeek}/${planned} sessions done</div>
+      </div>
+      <button class="week-nav-btn" onclick="schedNav(1)">Week ${Math.min(12,vw+1)} ›</button>
+    </div>
+    <div class="sched-week-progress">
+      <div class="prog-row">
+        <span class="prog-label">Week ${vw} adherence</span>
+        <span class="prog-pct">${pct}%</span>
+      </div>
+      <div class="prog-bar-bg"><div class="prog-bar-fill" style="width:${pct}%"></div></div>
+    </div>`;
+
+  SCHED_DATA.forEach(d=>{
+    const dk = 'w'+vw+'-'+d.key;
+    const isDone = !!S.done[dk];
+    const isRest = d.type==='rest';
+    html += `<div class="day-card${isDone?' done':''}${isRest?' rest-day':''}">
+      <div class="day-icon">${d.icon}</div>
+      <div class="day-info">
+        <div class="day-name">${d.day}</div>
+        <div class="day-session">${d.label}</div>
+      </div>
+      ${!isRest ? `<button class="day-toggle${isDone?' checked':''}" onclick="toggleDay(${vw},'${d.key}')">${isDone?'✓':''}</button>` : '<span style="font-size:11px;color:var(--mu)">Rest</span>'}
+    </div>`;
+  });
+
+  document.getElementById('schedContent').innerHTML = html;
+}
+function schedNav(delta){
+  const vw = schedViewWeek || S.week;
+  schedViewWeek = Math.max(1, Math.min(12, vw+delta));
+  renderSchedule();
+}
+function toggleDay(week, key){
+  const dk = 'w'+week+'-'+key;
+  S.done[dk] = !S.done[dk];
+  save(); renderSchedule(); updateTodaySnap();
+  const mp = document.getElementById('panel-metrics');
+  if(mp && mp.classList.contains('active')) renderMetrics();
+}
+
+let chartInst = null;
+function calcAdherence(){
+  const planned = 6;
+  let totalPlanned = 0, totalDone = 0;
+  const weekDone = [];
+  for(let wk=1; wk<=12; wk++){
+    const done = SCHED_DATA.filter(d=>d.type!=='rest'&&S.done['w'+wk+'-'+d.key]).length;
+    weekDone.push(done);
+    if(wk <= S.week){ totalPlanned += planned; totalDone += done; }
+  }
+  return {weekDone, totalPlanned, totalDone, pct: totalPlanned>0 ? Math.round((totalDone/totalPlanned)*100) : 0};
+}
+
+function renderMetrics(){
+  const {weekDone, totalPlanned, totalDone, pct} = calcAdherence();
+  const totalSessions = Object.values(S.done).filter(Boolean).length;
+
+  let html = `
+    <div class="big-stat-row">
+      <div class="big-stat"><div class="big-stat-val">${pct}%</div><div class="big-stat-lbl">Overall adherence</div></div>
+      <div class="big-stat"><div class="big-stat-val">${totalSessions}</div><div class="big-stat-lbl">Sessions completed</div></div>
+      <div class="big-stat"><div class="big-stat-val">${S.week}</div><div class="big-stat-lbl">Current week</div></div>
+    </div>`;
+
+  // Real data insights from Samsung Health
+  html += `<div class="card">
+    <div class="card-title">Samsung Health — Data Imported</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:10px">
+      <div class="stat"><div><span class="stat-val" style="font-size:20px">119.6</span><span class="stat-unit">kg</span></div><div class="stat-label">Peak weight (Jan 2026)</div></div>
+      <div class="stat"><div><span class="stat-val" style="font-size:20px">115.3</span><span class="stat-unit">kg</span></div><div class="stat-label">Program start (Apr 2026)</div></div>
+      <div class="stat"><div><span class="stat-val" style="font-size:20px">4.3</span><span class="stat-unit">kg</span></div><div class="stat-label">Lost since peak</div></div>
+      <div class="stat"><div><span class="stat-val" style="font-size:20px">31.4</span><span class="stat-unit">kg</span></div><div class="stat-label">To goal (84 kg)</div></div>
+    </div>
+    <div style="font-size:11px;color:var(--mu);line-height:1.6">You were 101.7 kg in Nov 2024, gained to 119.6 kg by Jan 2026 (+18 kg over 14 months). Already trending down before the program formally started. The program locked in the structure to make the loss consistent.</div>
+  </div>`;
+
+  const currentWt = S.weights['w'+S.week]||'';
+  html += `<div class="card">
+    <div class="card-title">Log Your Weight — Week ${S.week}</div>
+    <div class="weight-input-row">
+      <input class="weight-input" type="number" step="0.1" min="60" max="150" placeholder="e.g. 114.5" id="wtInput" value="${currentWt}" inputmode="decimal">
+      <button class="weight-save-btn" onclick="saveWeight()">Save kg</button>
+    </div>
+    <div style="font-size:11px;color:var(--mu)">Same time each week. Morning, after toilet, before eating.</div>
+  </div>`;
+
+  html += `<div class="card">
+    <div class="card-title">Full Weight History</div>
+    <div class="chart-wrap"><canvas id="weightChart"></canvas></div>
+  </div>`;
+
+  html += `<div class="card">
+    <div class="card-title">Weekly Adherence Breakdown</div>
+    <div class="week-bars">`;
+  for(let wk=1; wk<=12; wk++){
+    const done = weekDone[wk-1];
+    const barPct = Math.round((done/6)*100);
+    const isCur = wk===S.week;
+    html += `<div class="wbar-row">
+      <div class="wbar-label" style="${isCur?'color:#fff;font-weight:600':''}">W${wk}</div>
+      <div class="wbar-bg"><div class="wbar-fill" style="width:${barPct}%;${isCur?'':'opacity:.7'}"></div></div>
+      <div class="wbar-pct">${barPct}%</div>
+    </div>`;
+  }
+  html += `</div></div>`;
+
+  html += `<div class="card">
+    <div class="card-title">Journey Milestones</div>
+    <div class="timeline">
+      <div class="tl-item"><div class="tl-dot done">✓</div><div class="tl-label">Peak</div><div class="tl-val">119.6 kg</div></div>
+      <div class="tl-item"><div class="tl-dot done">✓</div><div class="tl-label">Start</div><div class="tl-val">115.3 kg</div></div>
+      <div class="tl-item"><div class="tl-dot">3</div><div class="tl-label">Month 3</div><div class="tl-val">~109 kg</div></div>
+      <div class="tl-item"><div class="tl-dot">4</div><div class="tl-label">Month 6</div><div class="tl-val">~103 kg</div></div>
+      <div class="tl-item"><div class="tl-dot">5</div><div class="tl-label">Goal</div><div class="tl-val">84 kg</div></div>
+    </div>
+  </div>`;
+
+  document.getElementById('metricsContent').innerHTML = html;
+
+  setTimeout(()=>{
+    const canvas = document.getElementById('weightChart');
+    if(!canvas || typeof Chart==='undefined') return;
+    if(chartInst){ chartInst.destroy(); chartInst=null; }
+
+    // Historical data from Samsung Health
+    const hist = S.weights.historical || [];
+    const histLabels = hist.map(h=>h.date.slice(5)); // MM-DD
+    const histData = hist.map(h=>h.kg);
+
+    // Program weeks (from program start ~Apr 27 2026)
+    const progStart = new Date('2026-04-27');
+    const weekLabels = Array.from({length:12},(_,i)=>{
+      const d = new Date(progStart);
+      d.setDate(d.getDate() + i*7);
+      return 'W'+(i+1);
+    });
+    const weekTargets = Array.from({length:12},(_,i)=> parseFloat((115.3 - i*0.5).toFixed(1)));
+    const weekActual = Array.from({length:12},(_,i)=>{ const v=S.weights['w'+(i+1)]; return v?parseFloat(v):null; });
+
+    // Combined chart: historical + program weeks
+    const allLabels = [...histLabels, ...weekLabels];
+    const allHistLine = [...histData, ...Array(12).fill(null)];
+    const allProgTarget = [...Array(hist.length).fill(null), ...weekTargets];
+    const allProgActual = [...Array(hist.length).fill(null), ...weekActual];
+    // Connect last historical to program start
+    if(hist.length > 0){
+      allProgTarget[hist.length-1] = hist[hist.length-1].kg;
+    }
+
+    chartInst = new Chart(canvas, {
+      type:'line',
+      data:{labels:allLabels, datasets:[
+        {label:'History',data:allHistLine,borderColor:'rgba(255,255,255,0.35)',borderWidth:1.5,pointRadius:3,pointBackgroundColor:'rgba(255,255,255,0.5)',tension:.3,fill:false,spanGaps:false},
+        {label:'Target',data:allProgTarget,borderColor:'rgba(232,255,71,0.5)',borderDash:[5,5],borderWidth:1.5,pointRadius:0,tension:.2,fill:false,spanGaps:true},
+        {label:'Actual',data:allProgActual,borderColor:'#E8FF47',borderWidth:2.5,pointBackgroundColor:'#E8FF47',pointRadius:5,tension:.2,fill:false,spanGaps:false},
+        {label:'Goal',data:[...Array(allLabels.length-1).fill(null),84],borderColor:'rgba(96,191,255,0.4)',borderDash:[3,3],borderWidth:1,pointRadius:4,pointBackgroundColor:'#60bfff',fill:false},
+      ]},
+      options:{responsive:true,maintainAspectRatio:false,
+        interaction:{mode:'index',intersect:false},
+        plugins:{
+          legend:{display:false},
+          tooltip:{backgroundColor:'#1c1c1c',borderColor:'#333',borderWidth:1,titleColor:'#888',bodyColor:'#fff',padding:10}
+        },
+        scales:{
+          x:{grid:{color:'#1a1a1a'},ticks:{color:'#555',font:{size:9},maxTicksLimit:10},border:{color:'#242424'}},
+          y:{min:80,max:122,grid:{color:'#1a1a1a'},ticks:{color:'#666',font:{size:10},callback:v=>v+' kg'},border:{color:'#242424'}}
+        }
+      }
+    });
+  }, 50);
+}
+
+function saveWeight(){
+  const inp = document.getElementById('wtInput');
+  const v = parseFloat(inp.value);
+  if(!v||v<60||v>150){ inp.style.borderColor='#e06060'; return; }
+  inp.style.borderColor='var(--a)';
+  S.weights['w'+S.week] = v;
+  save(); renderMetrics();
+}
+
+function toggleAcc(hdr){
+  const body=hdr.nextElementSibling, chev=hdr.querySelector('.chev'), open=body.classList.contains('open');
+  body.classList.toggle('open',!open); chev.classList.toggle('open',!open);
+}
+function switchTab(id,btn){
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('panel-'+id).classList.add('active');
+  btn.classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+  if(id==='metrics') renderMetrics();
+  if(id==='schedule') renderSchedule();
+}
+
+load();
+refreshAll();
+
+if('serviceWorker' in navigator){
+  const sw=`const C='fl-v5';self.addEventListener('install',e=>{self.skipWaiting();e.waitUntil(caches.open(C).then(c=>c.addAll(['./'])))});self.addEventListener('activate',e=>{e.waitUntil(clients.claim())});self.addEventListener('fetch',e=>{e.respondWith(caches.match(e.request).then(r=>r||fetch(e.request).then(res=>{const cl=res.clone();caches.open(C).then(c=>c.put(e.request,cl));return res}).catch(()=>caches.match(e.request))))})`;
+  navigator.serviceWorker.register(URL.createObjectURL(new Blob([sw],{type:'application/javascript'}))).catch(()=>{});
+}
+</script>
+</body>
+</html>
